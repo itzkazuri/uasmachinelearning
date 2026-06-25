@@ -1,0 +1,140 @@
+# ============================================================
+#  .gitignore — Klasifikasi Buah Project
+# ============================================================
+
+# ------------------------------------------------------------
+# Python
+# ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache / profiling
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ------------------------------------------------------------
+# Machine Learning — Model & Artifact Files
+# ------------------------------------------------------------
+# Keras / TensorFlow saved models
+*.keras
+*.h5
+*.hdf5
+*.pb
+*.tflite
+*.ckpt
+*.ckpt.*
+checkpoint
+
+# Model checkpoint directories
+saved_model/
+models/*.keras
+models/*.h5
+
+# Training outputs / logs
+outputs/
+logs/
+*.log
+tensorboard_logs/
+mlruns/
+
+# ------------------------------------------------------------
+# Dataset
+# Source: https://www.kaggle.com/datasets/sriramr/fruits-fresh-and-rotten-for-classification
+# Download manual → ekstrak ke folder Dataset/ (tidak di-commit)
+# ------------------------------------------------------------
+Dataset/
+dataset/
+data/
+
+# Archive hasil download Kaggle
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# Image files (raw training data — sudah tercakup dalam Dataset/)
+# Uncomment baris di bawah jika ingin ignore semua gambar secara global
+# *.jpg
+# *.jpeg
+# *.png
+# *.bmp
+# *.webp
+
+# ------------------------------------------------------------
+# Frontend — Vite / Node.js
+# ------------------------------------------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Logs npm/yarn/pnpm/bun
+frontend/logs/
+frontend/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Cache
+frontend/.vite/
+frontend/.cache/
+
+# Bun lockfile (opsional — uncomment jika tidak ingin commit)
+# frontend/bun.lock
+
+# ------------------------------------------------------------
+# API / Backend
+# ------------------------------------------------------------
+api/__pycache__/
+api/*.pyc
+
+# ------------------------------------------------------------
+# Environment & Secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.secret
+*.key
+
+# ------------------------------------------------------------
+# Editor & OS
+# ------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ------------------------------------------------------------
+# Antigravity / AI Artifacts (opsional)
+# ------------------------------------------------------------
+# .gemini/

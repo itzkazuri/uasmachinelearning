@@ -1,0 +1,24 @@
+# Use Python 3.11 or 3.12 for this environment.
+# TensorFlow GPU wheels are not expected to work reliably on Python 3.14 yet.
+
+# Deep learning / MobileNetV2 training
+tensorflow[and-cuda]
+
+# FastAPI inference API
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+
+# Image classification utilities
+numpy
+pillow
+opencv-python
+scikit-learn
+pandas
+matplotlib
+tqdm
+websockets
+
+# GUI Adwaita
+PyGObject
