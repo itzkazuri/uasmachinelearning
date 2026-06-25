@@ -1,0 +1,165 @@
+================================================================
+  UAS MACHINE LEARNING — LAPORAN PROJECT
+  Sistem Klasifikasi Buah Berbasis Deep Learning
+================================================================
+
+3. SUMBER DATA DAN JUMLAH DATA
+----------------------------------------------------------------
+
+Sumber Data:
+  Nama Dataset : Fruits Fresh and Rotten for Classification
+  Sumber       : Kaggle
+  URL          : https://www.kaggle.com/datasets/sriramr/fruits-fresh-and-rotten-for-classification
+  Kontributor  : Sriram R
+
+Jumlah Data:
+  Total gambar keseluruhan : ± 13.599 gambar
+  Pembagian data           :
+    - Data Training        : ± 10.879 gambar (80%)
+    - Data Validasi/Test   : ± 2.720 gambar  (20%)
+
+Kelas / Label (6 kelas):
+  1. freshapples    — Apel Segar
+  2. freshbanana    — Pisang Segar
+  3. freshoranges   — Jeruk Segar
+  4. rottenapples   — Apel Busuk
+  5. rottenbanana   — Pisang Busuk
+  6. rottenoranges  — Jeruk Busuk
+
+Format Data:
+  - Format gambar : JPG / PNG
+  - Ukuran input  : 224 x 224 piksel (resize saat preprocessing)
+  - Normalisasi   : nilai piksel dibagi 255 (range 0.0 – 1.0)
+
+Data Augmentation (diterapkan pada data training):
+  - Rotation range     : ±20 derajat
+  - Width shift range  : 0.2
+  - Height shift range : 0.2
+  - Shear range        : 0.2
+  - Zoom range         : 0.2
+  - Horizontal flip    : aktif
+  - Fill mode          : nearest
+
+
+4. MODEL YANG DIPERGUNAKAN
+----------------------------------------------------------------
+
+Metode     : Transfer Learning
+Arsitektur : MobileNetV2
+
+Alasan pemilihan MobileNetV2:
+  - Ringan dan efisien, cocok untuk komputer tanpa GPU tinggi
+  - Sudah pra-latih dengan ImageNet (jutaan gambar, 1.000 kelas)
+  - Menggunakan Depthwise Separable Convolution yang lebih cepat
+    dibanding VGG16 / ResNet tanpa mengorbankan akurasi signifikan
+
+Arsitektur Model Final:
+  [Input: 224x224x3]
+       ↓
+  MobileNetV2 (frozen — bobot tidak diubah saat training)
+       ↓
+  GlobalAveragePooling2D
+       ↓
+  Dense(128, activation='relu')
+       ↓
+  Dropout(0.2)
+       ↓
+  Dense(6, activation='softmax')  ← output 6 kelas
+
+Konfigurasi Training:
+  - Optimizer   : Adam (adaptive learning rate)
+  - Loss        : Categorical Crossentropy
+  - Metrik      : Accuracy
+  - Epochs      : 10
+  - Batch size  : 32
+  - Split ratio : 80% train / 20% validasi
+
+Format model tersimpan: models/fruit_model.keras
+
+
+5. HASIL DAN ANALISIS PROJECT
+----------------------------------------------------------------
+
+Hasil Training:
+  Model berhasil dilatih selama 10 epoch menggunakan Transfer
+  Learning MobileNetV2. Karena bobot base model dibekukan, proses
+  training berfokus hanya pada lapisan Dense yang ditambahkan,
+  sehingga konvergensi lebih cepat dan stabil.
+
+Kemampuan Model:
+  a. Klasifikasi Jenis Buah
+     Model mampu membedakan 3 jenis buah:
+     Apel, Pisang, dan Jeruk.
+
+  b. Deteksi Kondisi (Segar / Busuk)
+     Model mengklasifikasikan kondisi buah menjadi segar (fresh)
+     atau busuk (rotten) dengan menghitung persentase kebusukan
+     berdasarkan jumlah probabilitas semua kelas "rotten".
+
+  c. Prediksi Multi-mode
+     - Upload gambar via web (FastAPI + Vite)
+     - Upload gambar via GUI desktop (GTK 4 Adwaita)
+     - Real-time via kamera webcam (OpenCV + WebSocket)
+
+Analisis Kinerja Model:
+  - Transfer Learning terbukti efektif; model mencapai akurasi
+    yang baik meski dataset relatif kecil (~13.000 gambar)
+  - Data Augmentation membantu model lebih general dan tidak
+    overfit terhadap data training
+  - Dropout 0.2 pada lapisan Dense mengurangi risiko overfitting
+  - Klasifikasi real-time via kamera berhasil berjalan smooth
+    dengan bantuan Color Segmentation HSV dan Haar Cascade untuk
+    mengecualikan wajah manusia dari deteksi buah
+
+Output Prediksi:
+  {
+    "prediction"       : "freshapples",
+    "confidence"       : 0.98,
+    "rotten_percentage": 1.2,
+    "other_similarities": {
+        "freshapples"  : 98.0,
+        "rottenapples" : 1.2,
+        ...
+    }
+  }
+
+
+6. KONTRIBUSI PADA LINGKUNGAN SEKITAR DAN KEHIDUPAN SEHARI-HARI
+----------------------------------------------------------------
+
+Project klasifikasi buah ini memiliki potensi kontribusi nyata
+dalam berbagai aspek kehidupan sehari-hari:
+
+a. Mengurangi Pemborosan Makanan (Food Waste)
+   Dengan mendeteksi buah busuk secara otomatis dan akurat,
+   sistem ini dapat membantu konsumen dan pedagang memisahkan
+   buah layak konsumsi dari yang sudah busuk sebelum dikonsumsi
+   atau dijual, sehingga mengurangi pemborosan pangan.
+
+b. Mendukung Petani dan Pedagang Buah
+   Petani dan pedagang di pasar tradisional dapat menggunakan
+   sistem ini (via kamera atau upload foto) untuk melakukan
+   sortir buah secara cepat tanpa harus bergantung pada
+   pengalaman visual semata. Ini meningkatkan efisiensi kerja
+   dan mengurangi kerugian akibat menjual buah busuk.
+
+c. Keamanan Pangan (Food Safety)
+   Konsumsi buah busuk dapat menyebabkan gangguan kesehatan.
+   Sistem deteksi otomatis ini berperan sebagai "penjaga kualitas"
+   sebelum buah sampai ke tangan konsumen, berkontribusi pada
+   peningkatan keamanan pangan masyarakat.
+
+d. Potensi Integrasi pada Industri dan Retail
+   Sistem ini dapat dikembangkan lebih lanjut untuk diintegrasikan
+   ke conveyor belt sortir buah di gudang distribusi atau
+   supermarket, menggantikan proses sortir manual yang lambat
+   dan rawan human error.
+
+e. Edukasi dan Literasi Teknologi AI
+   Project ini juga berkontribusi pada edukasi masyarakat tentang
+   pemanfaatan kecerdasan buatan (AI) dalam kehidupan nyata,
+   membuktikan bahwa teknologi Machine Learning bukan hanya
+   untuk industri besar, tetapi juga dapat diaplikasikan pada
+   permasalahan sehari-hari yang sederhana namun berdampak luas.
+
+================================================================
